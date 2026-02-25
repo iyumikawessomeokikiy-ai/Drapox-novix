@@ -5,7 +5,9 @@
   "main": "server.js",
   "scripts": {
     "start": "node server.js",
-    "dev": "node server.js"
+    "dev": "node server.js",
+    "test": "node --check server.js",
+    "build:static": "node scripts/build-static.js"
   },
   "keywords": [
     "wedding",
