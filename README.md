@@ -37,3 +37,15 @@ Buka:
 - `views/admin.ejs` → dashboard admin
 - `public/css/style.css` → styling front-end & admin
 - `data/settings.json` → data konfigurasi undangan
+
+
+## Publish Release
+
+Workflow GitHub Actions telah disiapkan untuk membuat **GitHub Release** otomatis saat tag baru dengan format `v*` di-push (contoh: `v1.0.1`).
+
+```bash
+git tag v1.0.1
+git push origin v1.0.1
+```
+
+Setelah itu, release akan dipublikasikan otomatis di tab **Releases** dengan catatan rilis yang digenerate otomatis.
