@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="id">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Dashboard Admin - <%= settings.siteTitle %></title>
+    <link rel="stylesheet" href="/css/style.css" />
+  </head>
+  <body class="admin-body">
+    <main class="admin-wrap">
+      <h1>Dashboard Admin Undangan</h1>
+      <p class="muted">Atur konten tampilan undangan secara real-time.</p>
+
+      <% if (success) { %>
+        <p class="alert-success">✅ Pengaturan berhasil disimpan.</p>
+      <% } %>
+
+      <form action="/admin/save" method="POST" class="admin-form">
+        <section>
+          <h2>Informasi Umum</h2>
+          <label>Judul Website
+            <input name="siteTitle" value="<%= settings.siteTitle %>" required />
+          </label>
+          <label>Headline
+            <input name="headline" value="<%= settings.headline %>" required />
+          </label>
+          <label>Pesan Hero
+            <textarea name="heroMessage" rows="3" required><%= settings.heroMessage %></textarea>
+          </label>
+        </section>
+
+        <section>
+          <h2>Data Mempelai</h2>
+          <label>Nama Mempelai Pria
+            <input name="groomName" value="<%= settings.couple.groomName %>" required />
+          </label>
+          <label>Orang Tua Mempelai Pria
+            <input name="groomParents" value="<%= settings.couple.groomParents %>" required />
+          </label>
+          <label>Nama Mempelai Wanita
+            <input name="brideName" value="<%= settings.couple.brideName %>" required />
+          </label>
+          <label>Orang Tua Mempelai Wanita
+            <input name="brideParents" value="<%= settings.couple.brideParents %>" required />
+          </label>
+        </section>
+
+        <section>
+          <h2>Detail Acara</h2>
+          <label>Tanggal Akad
+            <input name="akadDate" value="<%= settings.event.akadDate %>" required />
+          </label>
+          <label>Jam Akad
+            <input name="akadTime" value="<%= settings.event.akadTime %>" required />
+          </label>
+          <label>Tanggal Resepsi
+            <input name="resepsiDate" value="<%= settings.event.resepsiDate %>" required />
+          </label>
+          <label>Jam Resepsi
+            <input name="resepsiTime" value="<%= settings.event.resepsiTime %>" required />
+          </label>
+          <label>Lokasi
+            <input name="venue" value="<%= settings.event.venue %>" required />
+          </label>
+        </section>
+
+        <section>
+          <h2>Tema</h2>
+          <div class="grid-2">
+            <label>Warna Utama
+              <input type="color" name="primaryColor" value="<%= settings.theme.primaryColor %>" />
+            </label>
+            <label>Warna Sekunder
+              <input type="color" name="secondaryColor" value="<%= settings.theme.secondaryColor %>" />
+            </label>
+          </div>
+          <label>Font Family (CSS)
+            <input name="fontFamily" value="<%= settings.theme.fontFamily %>" />
+          </label>
+        </section>
+
+        <section>
+          <h2>Cerita Cinta</h2>
+          <p class="muted">Satu baris untuk satu milestone.</p>
+          <textarea name="story" rows="5"><%= settings.story.join('\n') %></textarea>
+        </section>
+
+        <section>
+          <h2>Galeri</h2>
+          <p class="muted">Masukkan URL gambar, satu URL per baris.</p>
+          <textarea name="gallery" rows="5"><%= settings.gallery.join('\n') %></textarea>
+        </section>
+
+        <section>
+          <h2>RSVP</h2>
+          <label>Nomor WhatsApp (format internasional tanpa +)
+            <input name="whatsappNumber" value="<%= settings.rsvp.whatsappNumber %>" required />
+          </label>
+          <label>Template Pesan RSVP
+            <textarea name="messageTemplate" rows="3" required><%= settings.rsvp.messageTemplate %></textarea>
+          </label>
+        </section>
+
+        <div class="actions">
+          <button type="submit" class="btn">Simpan Pengaturan</button>
+          <a href="/" class="btn btn-light">Lihat Halaman Undangan</a>
+        </div>
+      </form>
+    </main>
+  </body>
+</html>

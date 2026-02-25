@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="id">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title><%= settings.siteTitle %></title>
+    <link rel="stylesheet" href="/css/style.css" />
+    <style>
+      :root {
+        --primary-color: <%= settings.theme.primaryColor %>;
+        --secondary-color: <%= settings.theme.secondaryColor %>;
+        --font-family: <%= JSON.stringify(safeFontFamily) %>;
+      }
+    </style>
+  </head>
+  <body>
+    <header class="hero">
+      <p class="label">Undangan Pernikahan</p>
+      <h1><%= settings.headline %></h1>
+      <p><%= settings.heroMessage %></p>
+      <a href="#event" class="btn">Lihat Detail Acara</a>
+    </header>
+
+    <main>
+      <section class="card couple">
+        <h2>Mempelai</h2>
+        <div class="grid-2">
+          <article>
+            <h3><%= settings.couple.groomName %></h3>
+            <p><%= settings.couple.groomParents %></p>
+          </article>
+          <article>
+            <h3><%= settings.couple.brideName %></h3>
+            <p><%= settings.couple.brideParents %></p>
+          </article>
+        </div>
+      </section>
+
+      <section id="event" class="card">
+        <h2>Rangkaian Acara</h2>
+        <div class="grid-2">
+          <article>
+            <h3>Akad Nikah</h3>
+            <p><%= settings.event.akadDate %></p>
+            <p><%= settings.event.akadTime %></p>
+          </article>
+          <article>
+            <h3>Resepsi</h3>
+            <p><%= settings.event.resepsiDate %></p>
+            <p><%= settings.event.resepsiTime %></p>
+          </article>
+        </div>
+        <p class="venue"><strong>Lokasi:</strong> <%= settings.event.venue %></p>
+      </section>
+
+      <section class="card">
+        <h2>Perjalanan Cinta</h2>
+        <ul class="timeline">
+          <% settings.story.forEach((line) => { %>
+            <li><%= line %></li>
+          <% }); %>
+        </ul>
+      </section>
+
+      <section class="card">
+        <h2>Galeri</h2>
+        <div class="gallery">
+          <% settings.gallery.forEach((img) => { %>
+            <img src="<%= img %>" alt="Foto pasangan" loading="lazy" />
+          <% }); %>
+        </div>
+      </section>
+
+      <section class="card rsvp">
+        <h2>Konfirmasi Kehadiran</h2>
+        <p>Kami menantikan kehadiran serta doa terbaik Anda.</p>
+        <a
+          class="btn"
+          href="https://wa.me/<%= settings.rsvp.whatsappNumber %>?text=<%= encodeURIComponent(settings.rsvp.messageTemplate) %>"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          Kirim RSVP via WhatsApp
+        </a>
+      </section>
+    </main>
+
+    <footer>
+      <p>Terima kasih atas doa dan restunya.</p>
+      <a href="/admin">Masuk ke Dashboard Admin</a>
+    </footer>
+  </body>
+</html>

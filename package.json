@@ -1,0 +1,23 @@
+{
+  "name": "drapox-novix-wedding",
+  "version": "1.0.0",
+  "description": "Website undangan pernikahan Node.js dengan panel admin",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node server.js"
+  },
+  "keywords": [
+    "wedding",
+    "invitation",
+    "nodejs",
+    "express",
+    "dashboard"
+  ],
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "ejs": "^3.1.10",
+    "express": "^4.21.2"
+  }
+}
