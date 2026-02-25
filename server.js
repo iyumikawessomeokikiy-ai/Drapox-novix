@@ -5,6 +5,9 @@ const fs = require('fs');
 const app = express();
 const PORT = process.env.PORT || 3000;
 const SETTINGS_PATH = path.join(__dirname, 'data', 'settings.json');
+const ADMIN_USERNAME = process.env.ADMIN_USERNAME || 'admin';
+const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD || 'change-me';
+const FALLBACK_FONT_FAMILY = "'Segoe UI', sans-serif";
 
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views'));
@@ -21,18 +24,65 @@ function saveSettings(settings) {
   fs.writeFileSync(SETTINGS_PATH, JSON.stringify(settings, null, 2), 'utf-8');
 }
 
+function sanitizeFontFamily(fontFamily) {
+  if (typeof fontFamily !== 'string') {
+    return FALLBACK_FONT_FAMILY;
+  }
+
+  const trimmed = fontFamily.trim();
+
+  if (!trimmed) {
+    return FALLBACK_FONT_FAMILY;
+  }
+
+  const safeFontFamily = trimmed
+    .replace(/[^a-zA-Z0-9\s,'"-]/g, '')
+    .slice(0, 100);
+
+  return safeFontFamily || FALLBACK_FONT_FAMILY;
+}
+
+function requireAdminAuth(req, res, next) {
+  const authHeader = req.headers.authorization || '';
+  const [scheme, encoded] = authHeader.split(' ');
+
+  if (scheme !== 'Basic' || !encoded) {
+    res.set('WWW-Authenticate', 'Basic realm="Admin Dashboard"');
+    return res.status(401).send('Authentication required.');
+  }
+
+  const credentials = Buffer.from(encoded, 'base64').toString('utf-8');
+  const separatorIndex = credentials.indexOf(':');
+
+  if (separatorIndex === -1) {
+    res.set('WWW-Authenticate', 'Basic realm="Admin Dashboard"');
+    return res.status(401).send('Invalid authentication credentials.');
+  }
+
+  const username = credentials.slice(0, separatorIndex);
+  const password = credentials.slice(separatorIndex + 1);
+
+  if (username !== ADMIN_USERNAME || password !== ADMIN_PASSWORD) {
+    res.set('WWW-Authenticate', 'Basic realm="Admin Dashboard"');
+    return res.status(401).send('Invalid username or password.');
+  }
+
+  next();
+}
+
 app.get('/', (req, res) => {
   const settings = loadSettings();
-  res.render('invitation', { settings });
+  const safeFontFamily = sanitizeFontFamily(settings.theme.fontFamily);
+  res.render('invitation', { settings, safeFontFamily });
 });
 
-app.get('/admin', (req, res) => {
+app.get('/admin', requireAdminAuth, (req, res) => {
   const settings = loadSettings();
   const success = req.query.success === '1';
   res.render('admin', { settings, success });
 });
 
-app.post('/admin/save', (req, res) => {
+app.post('/admin/save', requireAdminAuth, (req, res) => {
   const previous = loadSettings();
 
   const story = (req.body.story || '')
@@ -65,7 +115,7 @@ app.post('/admin/save', (req, res) => {
     theme: {
       primaryColor: req.body.primaryColor || previous.theme.primaryColor,
       secondaryColor: req.body.secondaryColor || previous.theme.secondaryColor,
-      fontFamily: req.body.fontFamily || previous.theme.fontFamily
+      fontFamily: sanitizeFontFamily(req.body.fontFamily || previous.theme.fontFamily)
     },
     story: story.length ? story : previous.story,
     gallery: gallery.length ? gallery : previous.gallery,

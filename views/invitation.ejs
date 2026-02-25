@@ -9,7 +9,7 @@
       :root {
         --primary-color: <%= settings.theme.primaryColor %>;
         --secondary-color: <%= settings.theme.secondaryColor %>;
-        --font-family: <%- JSON.stringify(settings.theme.fontFamily) %>;
+        --font-family: <%= JSON.stringify(safeFontFamily) %>;
       }
     </style>
   </head>
