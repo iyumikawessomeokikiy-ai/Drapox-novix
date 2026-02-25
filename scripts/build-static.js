@@ -5,9 +5,8 @@ const ejs = require('ejs');
 const ROOT = path.join(__dirname, '..');
 const SETTINGS_PATH = path.join(ROOT, 'data', 'settings.json');
 const INVITATION_TEMPLATE_PATH = path.join(ROOT, 'views', 'invitation.ejs');
-const DIST_DIR = path.join(ROOT, 'dist');
-const DIST_CSS_DIR = path.join(DIST_DIR, 'css');
 const SOURCE_CSS_DIR = path.join(ROOT, 'public', 'css');
+const OUTPUT_DIRS = [path.join(ROOT, 'dist'), path.join(ROOT, 'docs')];
 const FALLBACK_FONT_FAMILY = "'Segoe UI', sans-serif";
 
 function sanitizeFontFamily(fontFamily) {
@@ -33,6 +32,14 @@ function ensureCleanDir(dirPath) {
   fs.mkdirSync(dirPath, { recursive: true });
 }
 
+function writeStaticOutput(dirPath, html) {
+  const cssDir = path.join(dirPath, 'css');
+  ensureCleanDir(dirPath);
+  fs.mkdirSync(cssDir, { recursive: true });
+  fs.cpSync(SOURCE_CSS_DIR, cssDir, { recursive: true });
+  fs.writeFileSync(path.join(dirPath, 'index.html'), html, 'utf-8');
+}
+
 async function buildStaticSite() {
   const settings = JSON.parse(fs.readFileSync(SETTINGS_PATH, 'utf-8'));
   const safeFontFamily = sanitizeFontFamily(settings.theme.fontFamily);
@@ -56,15 +63,14 @@ async function buildStaticSite() {
       '<!-- Admin dashboard tersedia hanya untuk deployment Node.js runtime -->'
     );
 
-  ensureCleanDir(DIST_DIR);
-  fs.mkdirSync(DIST_CSS_DIR, { recursive: true });
-  fs.cpSync(SOURCE_CSS_DIR, DIST_CSS_DIR, { recursive: true });
-  fs.writeFileSync(path.join(DIST_DIR, 'index.html'), staticHtml, 'utf-8');
+  OUTPUT_DIRS.forEach((dirPath) => {
+    writeStaticOutput(dirPath, staticHtml);
+  });
 }
 
 buildStaticSite()
   .then(() => {
-    console.log('Static site generated in dist/.');
+    console.log('Static site generated in dist/ and docs/.');
   })
   .catch((error) => {
     console.error(error);

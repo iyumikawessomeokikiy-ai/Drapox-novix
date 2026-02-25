@@ -41,14 +41,20 @@ npm install
 npm run build:static
 ```
 
-Output akan dibuat di folder `dist/` dan bisa di-deploy ke GitHub Pages.
-
+Output akan dibuat di folder `dist/` (artifact GitHub Actions) **dan** `docs/` (fallback static branch deploy).
 
 ### Setting wajib di GitHub
 
-Buka `Settings -> Pages`, lalu pada **Build and deployment** pilih **Source: GitHub Actions**.
+Ada 2 opsi yang sama-sama didukung:
 
-Workflow deploy akan jalan saat ada push ke branch `main` **atau** `work`.
+1. **Source: GitHub Actions** (direkomendasikan)
+   - gunakan workflow `.github/workflows/deploy-pages.yml`
+   - deploy jalan saat ada push ke branch `main` atau `work`
+
+2. **Source: Deploy from a branch**
+   - pilih branch `main`
+   - folder: `/docs`
+   - website akan langsung serve dari folder `docs/` yang sudah digenerate
 
 ### Keterbatasan mode GitHub Pages
 
