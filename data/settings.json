@@ -1,0 +1,37 @@
+{
+  "siteTitle": "Undangan Pernikahan Adit & Nisa",
+  "headline": "The Wedding of Adit & Nisa",
+  "heroMessage": "Dengan memohon rahmat dan ridho Allah SWT, kami mengundang Bapak/Ibu/Saudara/i untuk hadir pada acara pernikahan kami.",
+  "couple": {
+    "groomName": "Adit Pratama",
+    "groomParents": "Putra dari Bapak Suryana & Ibu Ratna",
+    "brideName": "Nisa Aulia",
+    "brideParents": "Putri dari Bapak Hidayat & Ibu Salma"
+  },
+  "event": {
+    "akadDate": "Minggu, 22 Juni 2026",
+    "akadTime": "08:00 WIB",
+    "resepsiDate": "Minggu, 22 Juni 2026",
+    "resepsiTime": "11:00 - 14:00 WIB",
+    "venue": "Gedung Serbaguna Bahagia, Jakarta"
+  },
+  "theme": {
+    "primaryColor": "#8e5a4b",
+    "secondaryColor": "#f7ede6",
+    "fontFamily": "'Segoe UI', sans-serif"
+  },
+  "story": [
+    "2019 - Pertama kali bertemu di kampus dan menjadi teman diskusi.",
+    "2022 - Mulai membangun komitmen dan memperkenalkan keluarga.",
+    "2026 - Dengan restu orang tua, kami memutuskan menikah."
+  ],
+  "gallery": [
+    "https://images.unsplash.com/photo-1511285560929-80b456fea0bc?auto=format&fit=crop&w=900&q=80",
+    "https://images.unsplash.com/photo-1520854221256-17451cc331bf?auto=format&fit=crop&w=900&q=80",
+    "https://images.unsplash.com/photo-1464863979621-258859e62245?auto=format&fit=crop&w=900&q=80"
+  ],
+  "rsvp": {
+    "whatsappNumber": "6281234567890",
+    "messageTemplate": "Halo, saya akan hadir di acara pernikahan Adit & Nisa."
+  }
+}
