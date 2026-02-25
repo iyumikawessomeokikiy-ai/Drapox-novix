@@ -43,6 +43,13 @@ npm run build:static
 
 Output akan dibuat di folder `dist/` dan bisa di-deploy ke GitHub Pages.
 
+
+### Setting wajib di GitHub
+
+Buka `Settings -> Pages`, lalu pada **Build and deployment** pilih **Source: GitHub Actions**.
+
+Workflow deploy akan jalan saat ada push ke branch `main` **atau** `work`.
+
 ### Keterbatasan mode GitHub Pages
 
 Karena GitHub Pages hanya melayani file statis, maka fitur berikut **tidak tersedia** di Pages:
