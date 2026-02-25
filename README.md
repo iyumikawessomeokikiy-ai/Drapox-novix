@@ -49,3 +49,17 @@ git push origin v1.0.1
 ```
 
 Setelah itu, release akan dipublikasikan otomatis di tab **Releases** dengan catatan rilis yang digenerate otomatis.
+
+
+## CI Build Webpack (GitHub Actions)
+
+Aplikasi kini punya workflow **Webpack Build** di GitHub Actions untuk build project Node.js dengan npm + webpack.
+
+Workflow: `.github/workflows/webpack-build.yml`
+
+Tahapan CI:
+- checkout source
+- setup Node.js 20
+- `npm ci`
+- `npm run build`
+- upload artifact `public/js/app.js`
