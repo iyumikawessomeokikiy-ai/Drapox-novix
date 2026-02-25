@@ -1,6 +1,7 @@
 const express = require('express');
 const path = require('path');
 const fs = require('fs');
+const crypto = require('crypto');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -8,6 +9,8 @@ const SETTINGS_PATH = path.join(__dirname, 'data', 'settings.json');
 const ADMIN_USERNAME = process.env.ADMIN_USERNAME || 'admin';
 const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD || 'change-me';
 const FALLBACK_FONT_FAMILY = "'Segoe UI', sans-serif";
+const FALLBACK_PRIMARY_COLOR = '#8e5a4b';
+const FALLBACK_SECONDARY_COLOR = '#f7ede6';
 
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views'));
@@ -42,29 +45,56 @@ function sanitizeFontFamily(fontFamily) {
   return safeFontFamily || FALLBACK_FONT_FAMILY;
 }
 
+function sanitizeHexColor(color, fallback) {
+  if (typeof color !== 'string') {
+    return fallback;
+  }
+
+  const trimmed = color.trim();
+
+  if (!/^#([A-Fa-f0-9]{3}|[A-Fa-f0-9]{6})$/.test(trimmed)) {
+    return fallback;
+  }
+
+  return trimmed;
+}
+
+function safeCompare(actual, expected) {
+  const actualBuffer = Buffer.from(actual || '', 'utf-8');
+  const expectedBuffer = Buffer.from(expected || '', 'utf-8');
+
+  if (actualBuffer.length !== expectedBuffer.length) {
+    return false;
+  }
+
+  return crypto.timingSafeEqual(actualBuffer, expectedBuffer);
+}
+
+function rejectUnauthorized(res, message) {
+  res.set('WWW-Authenticate', 'Basic realm="Admin Dashboard"');
+  return res.status(401).send(message);
+}
+
 function requireAdminAuth(req, res, next) {
   const authHeader = req.headers.authorization || '';
   const [scheme, encoded] = authHeader.split(' ');
 
   if (scheme !== 'Basic' || !encoded) {
-    res.set('WWW-Authenticate', 'Basic realm="Admin Dashboard"');
-    return res.status(401).send('Authentication required.');
+    return rejectUnauthorized(res, 'Authentication required.');
   }
 
   const credentials = Buffer.from(encoded, 'base64').toString('utf-8');
   const separatorIndex = credentials.indexOf(':');
 
   if (separatorIndex === -1) {
-    res.set('WWW-Authenticate', 'Basic realm="Admin Dashboard"');
-    return res.status(401).send('Invalid authentication credentials.');
+    return rejectUnauthorized(res, 'Invalid authentication credentials.');
   }
 
   const username = credentials.slice(0, separatorIndex);
   const password = credentials.slice(separatorIndex + 1);
 
-  if (username !== ADMIN_USERNAME || password !== ADMIN_PASSWORD) {
-    res.set('WWW-Authenticate', 'Basic realm="Admin Dashboard"');
-    return res.status(401).send('Invalid username or password.');
+  if (!safeCompare(username, ADMIN_USERNAME) || !safeCompare(password, ADMIN_PASSWORD)) {
+    return rejectUnauthorized(res, 'Invalid username or password.');
   }
 
   next();
@@ -72,8 +102,13 @@ function requireAdminAuth(req, res, next) {
 
 app.get('/', (req, res) => {
   const settings = loadSettings();
-  const safeFontFamily = sanitizeFontFamily(settings.theme.fontFamily);
-  res.render('invitation', { settings, safeFontFamily });
+  const safeTheme = {
+    primaryColor: sanitizeHexColor(settings.theme.primaryColor, FALLBACK_PRIMARY_COLOR),
+    secondaryColor: sanitizeHexColor(settings.theme.secondaryColor, FALLBACK_SECONDARY_COLOR),
+    fontFamily: sanitizeFontFamily(settings.theme.fontFamily)
+  };
+
+  res.render('invitation', { settings, safeTheme });
 });
 
 app.get('/admin', requireAdminAuth, (req, res) => {
@@ -113,8 +148,8 @@ app.post('/admin/save', requireAdminAuth, (req, res) => {
       venue: req.body.venue || previous.event.venue
     },
     theme: {
-      primaryColor: req.body.primaryColor || previous.theme.primaryColor,
-      secondaryColor: req.body.secondaryColor || previous.theme.secondaryColor,
+      primaryColor: sanitizeHexColor(req.body.primaryColor, previous.theme.primaryColor),
+      secondaryColor: sanitizeHexColor(req.body.secondaryColor, previous.theme.secondaryColor),
       fontFamily: sanitizeFontFamily(req.body.fontFamily || previous.theme.fontFamily)
     },
     story: story.length ? story : previous.story,

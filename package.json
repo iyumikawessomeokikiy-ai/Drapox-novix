@@ -5,7 +5,9 @@
   "main": "server.js",
   "scripts": {
     "start": "node server.js",
-    "dev": "node server.js"
+    "dev": "node server.js",
+    "build": "webpack --mode production",
+    "dev:webpack": "webpack --watch --mode development"
   },
   "keywords": [
     "wedding",
@@ -19,5 +21,9 @@
   "dependencies": {
     "ejs": "^3.1.10",
     "express": "^4.21.2"
+  },
+  "devDependencies": {
+    "webpack": "^5.97.1",
+    "webpack-cli": "^6.0.1"
   }
 }

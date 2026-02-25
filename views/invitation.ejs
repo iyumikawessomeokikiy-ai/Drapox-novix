@@ -7,9 +7,9 @@
     <link rel="stylesheet" href="/css/style.css" />
     <style>
       :root {
-        --primary-color: <%= settings.theme.primaryColor %>;
-        --secondary-color: <%= settings.theme.secondaryColor %>;
-        --font-family: <%= JSON.stringify(safeFontFamily) %>;
+        --primary-color: <%= safeTheme.primaryColor %>;
+        --secondary-color: <%= safeTheme.secondaryColor %>;
+        --font-family: <%= JSON.stringify(safeTheme.fontFamily) %>;
       }
     </style>
   </head>
@@ -89,5 +89,6 @@
       <p>Terima kasih atas doa dan restunya.</p>
       <a href="/admin">Masuk ke Dashboard Admin</a>
     </footer>
+    <script src="/js/app.js" defer></script>
   </body>
 </html>
